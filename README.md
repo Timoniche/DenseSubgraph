@@ -9,3 +9,12 @@ http://people.seas.harvard.edu/~babis/dsd.pdf
 - Goldberg's bin-search algorithm
 
 - Faster Greedy Charikar
+
+### to run
+brew install boost
+
+in *CMakeLists.txt:*
+```
+set(BOOST_ROOT "**YOUR_PATH**")
+find_package(Boost **YOUR_VERSION** COMPONENTS graph REQUIRED)
+```
