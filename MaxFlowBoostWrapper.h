@@ -62,7 +62,7 @@ public:
     }
 
     // start the calculation
-    double calculateMaxFlow()
+    float calculateMaxFlow()
     {
         std::vector<float> residualCapacity(getNumberOfEdges(), 0);
 

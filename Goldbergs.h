@@ -10,19 +10,24 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
 struct Goldbergs
 {
 public:
+#define DENSE_TYPE 4
+
     explicit Goldbergs(const char *filename)
     {
         graph_from_file(filename);
     }
 
     /**
-     * @returns subgraph related to the maximum dense
+     * @return subgraph related to the maximum dense
      */
     std::vector<int> binsearch_goldberg();
+
+    float count_density(std::vector<int> const& subgraph);
 
     void graph_from_file(const char *filename);
 
@@ -60,6 +65,26 @@ std::vector<int> Goldbergs::binsearch_goldberg()
     return subgraph;
 }
 
+/**
+ *
+ * @param subgraph Pre: not empty
+ */
+float Goldbergs::count_density(std::vector<int> const& subgraph)
+{
+    assert(!subgraph.empty() && "subgraph can't be empty");
+    float dens = 0.f;
+    float vertices_cnt = subgraph.size();
+    std::unordered_set<int> vertices(subgraph.begin(), subgraph.end());
+    for (auto& e : _edges)
+    {
+        if (vertices.contains(e.first) && vertices.contains(e.second))
+        {
+            dens += 2.f;
+        }
+    }
+    return dens / (2.f * vertices_cnt);
+}
+
 void Goldbergs::graph_from_file(const char *filename)
 {
     freopen(filename, "r", stdin);
@@ -91,12 +116,11 @@ std::vector<int> Goldbergs::find_subgraph_dense_more_than(float least_density)
         graph.addTerminalEdges(i, _edges_cnt,
                                static_cast<float>(_edges_cnt) + 2.0f * least_density - static_cast<float>(_degrees[i]));
     }
-    //graph.draw_graph(std::cout);
     std::cout << "Max Flow for density " << least_density << " is: " << graph.calculateMaxFlow() << std::endl;
     std::vector<int> subgraph{};
     for (int i = 0; i < _nodes_cnt; i++)
     {
-        if (graph.groupOf(i) == 4)
+        if (graph.groupOf(i) == DENSE_TYPE)
         {
             subgraph.push_back(i);
         }
