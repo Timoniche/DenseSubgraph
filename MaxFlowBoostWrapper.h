@@ -6,7 +6,7 @@
  *  Licensed under GNU General Public License 3.0 or later.
  *  Some rights reserved.
  *
- *  Updated by Timoniche
+ *  Updated by Timoniche (Dmitrii Dulaev)
  */
 
 #ifndef __MaxFlowGraphBoost_hxx_
@@ -16,12 +16,14 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/boykov_kolmogorov_max_flow.hpp>
+#include <boost/graph/graphviz.hpp>
 
 /*
 * Wraps the boosts graph library for easier use of the boykov_kolmogorov_max_flow algorithm.
 *
 */
-class MaxFlowBoostWrapper {
+class MaxFlowBoostWrapper
+{
 public:
     typedef boost::adjacency_list<boost::listS, boost::vecS, boost::directedS,
             boost::no_property,
@@ -31,11 +33,13 @@ public:
 
     explicit MaxFlowBoostWrapper(unsigned int numVertices)
             : numberOfVertices(numVertices + 2), SOURCE(numberOfVertices - 2), SINK(numberOfVertices - 1),
-              currentEdgeIndex(-1), graph(numberOfVertices), reverseEdges(), capacity(), groups(numberOfVertices) {
+              currentEdgeIndex(-1), graph(numberOfVertices), reverseEdges(), capacity(), groups(numberOfVertices)
+    {
     }
 
     // boykov_kolmogorov_max_flow requires all edges to have a reverse edge.
-    void addBidirectionalEdge(unsigned int source, unsigned int target, float weight, float reverseWeight) {
+    void addBidirectionalEdge(unsigned int source, unsigned int target, float weight, float reverseWeight)
+    {
 
         // tracking the currentEdgeIndex manually instead of getting it via boost:num_edges(graph) results in a massive
         // speedup: http://stackoverflow.com/questions/7890857/boost-graph-library-edge-insertion-slow-for-large-graph
@@ -51,13 +55,15 @@ public:
         capacity.push_back(weight);
     }
 
-    void addTerminalEdges(unsigned int node, float sourceWeight, float sinkWeight) {
+    void addTerminalEdges(unsigned int node, float sourceWeight, float sinkWeight)
+    {
         addBidirectionalEdge(node, SOURCE, sourceWeight, sinkWeight);
         addBidirectionalEdge(node, SINK, sinkWeight, sinkWeight);
     }
 
     // start the calculation
-    long calculateMaxFlow() {
+    double calculateMaxFlow()
+    {
         std::vector<float> residualCapacity(getNumberOfEdges(), 0);
 
         // max flow
@@ -76,24 +82,34 @@ public:
                                                  boost::get(boost::vertex_index, graph), SOURCE, SINK);
     }
 
+    void draw_graph(std::ostream& os)
+    {
+        boost::write_graphviz(os, graph);
+    }
+
     // query the resulting segmentation group of a vertex.
-    int groupOf(unsigned int vertex) {
+    int groupOf(unsigned int vertex)
+    {
         return groups.at(vertex);
     }
 
-    int groupOfSource() {
+    int groupOfSource()
+    {
         return groupOf(SOURCE);
     }
 
-    int groupOfSink() {
+    int groupOfSink()
+    {
         return groupOf(SINK);
     }
 
-    long getNumberOfVertices() {
+    long getNumberOfVertices()
+    {
         return boost::num_vertices(graph) - 2;
     }
 
-    long getNumberOfEdges() {
+    long getNumberOfEdges()
+    {
         return boost::num_edges(graph);
     }
 

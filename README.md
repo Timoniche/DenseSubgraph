@@ -6,9 +6,11 @@ d(S) = E(S) / V(S)
 http://people.seas.harvard.edu/~babis/dsd.pdf
 
 ### Implemented methods:
-- Goldberg's bin-search algorithm
+- **Goldberg's bin-search algorithm**
 
-- Faster Greedy Charikar
+    - edges.txt format: vertices from 0
+
+- **Faster Greedy Charikar** (not implemented yet)
 
 ### to run
 brew install boost

@@ -14,5 +14,5 @@ message(STATUS "Boost_LIBRARIES: ${Boost_LIBRARIES}")
 message(STATUS "Boost_VERSION: ${Boost_VERSION}")
 
 include_directories(${Boost_INCLUDE_DIRS})
-add_executable(DenseSubgraph main.cpp MaxFlowBoostWrapper.h)
+add_executable(DenseSubgraph main.cpp MaxFlowBoostWrapper.h Goldbergs.h)
 target_link_libraries(DenseSubgraph ${Boost_LIBRARIES})
