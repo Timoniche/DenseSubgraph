@@ -9,6 +9,8 @@ http://people.seas.harvard.edu/~babis/dsd.pdf
 - **Goldberg's bin-search algorithm**
 
     - edges.txt format: vertices from 0
+   
+![alt text](https://github.com/Timoniche/DenseSubgraph/blob/main/example.jpg)
 
 - **Faster Greedy Charikar** (not implemented yet)
 
